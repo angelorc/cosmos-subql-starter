@@ -1,0 +1,53 @@
+specVersion: 1.0.0
+name: bitsong-subql-starter
+version: 0.0.1
+runner:
+  node:
+    name: '@subql/node-cosmos'
+    version: '>=0.1.0'
+  query:
+    name: '@subql/query'
+    version: '*'
+description: >-
+  This project can be use as a starting point for developing your BitSong
+  based SubQuery project
+repository: 'https://github.com/angelorc/cosmos-subql-starter'
+schema:
+  file: ./schema.graphql
+network:
+  chainId: bitsong-2b
+  #  This endpoint might not be publicly available
+  endpoint: 'https://rpc.explorebitsong.com'
+  dictionary: 'https://api.subquery.network/sq/subquery/cosmos-hub-dictionary'
+  chainTypes:
+    bitsong.fantoken:
+      file: ./proto/bitsong/fantoken/v1beta1/tx.proto
+      messages:
+        - MsgIssue
+        - MsgDisableMint
+        - MsgMint
+        - MsgBurn
+        - MsgSetMinter
+        - MsgSetAuthority
+        - MsgSetUri
+    bitsong.fantoken.v1beta1.fantoken:
+      file: ./proto/bitsong/fantoken/v1beta1/fantoken.proto
+      messages:
+        - FanToken
+        - Metadata
+dataSources:
+  - kind: cosmos/Runtime
+    startBlock: 6780800
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleEvent
+          kind: cosmos/EventHandler
+          filter:
+            type: bitsong.fantoken.v1beta1.EventIssue
+            messageFilter:
+              type: /bitsong.fantoken.MsgIssue
+        - handler: handleMessage
+          kind: cosmos/MessageHandler
+          filter:
+            type: /bitsong.fantoken.MsgIssue
