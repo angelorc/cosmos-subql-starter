@@ -31,12 +31,12 @@ type Fantoken @entity {
   id: ID!
   blockHeight: BigInt!
   txHash: String!
-  symbol: String!
-}
-
-type FantokenIssueEvent @entity {
-  id: ID!
-  blockHeight: BigInt!
-  txHash: String!
+  name: String!
   denom: String!
+  symbol: String!
+  max_supply: String!
+  uri: String!
+  authority: String!
+  minter: String!
+  createdAt: String!
 }
