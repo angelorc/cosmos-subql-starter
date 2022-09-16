@@ -32,9 +32,10 @@ type Fantoken @entity {
   blockHeight: BigInt!
   txHash: String!
   name: String!
-  denom: String!
+  denom: String! @index
   symbol: String!
-  max_supply: BigInt!
+  supply: BigInt!
+  maxSupply: BigInt!
   uri: String!
   authority: String!
   minter: String!

@@ -35,9 +35,13 @@ network:
       messages:
         - FanToken
         - Metadata
+    cosmos.base.v1beta1: # needed by MsgMint
+      file: "./proto/cosmos/cosmos.base.v1beta1.coin.proto"
+      messages:
+        - "Coin"
 dataSources:
   - kind: cosmos/Runtime
-    startBlock: 6780800
+    startBlock: 6777765
     mapping:
       file: ./dist/index.js
       handlers:
@@ -46,8 +50,19 @@ dataSources:
           filter:
             type: bitsong.fantoken.v1beta1.EventIssue
             messageFilter:
-              type: /bitsong.fantoken.MsgIssue
+              type: "/bitsong.fantoken.MsgIssue"
+
         - handler: handleMsgIssue
           kind: cosmos/MessageHandler
           filter:
-            type: /bitsong.fantoken.MsgIssue
+            type: "/bitsong.fantoken.MsgIssue"
+
+        - handler: handleMsgMint
+          kind: cosmos/MessageHandler
+          filter:
+            type: /bitsong.fantoken.MsgMint
+
+        - handler: handleMsgBurn
+          kind: cosmos/MessageHandler
+          filter:
+            type: /bitsong.fantoken.MsgBurn

@@ -12,7 +12,8 @@ export async function handleMsgIssue(msg: CosmosMessage): Promise<void> {
     name: msg.msg.decodedMsg.name,
     symbol: msg.msg.decodedMsg.symbol,
     denom: "",
-    max_supply: msg.msg.decodedMsg.maxSupply,
+    maxSupply: msg.msg.decodedMsg.maxSupply,
+    supply: BigInt(0),
     uri: msg.msg.decodedMsg.uri,
     authority: msg.msg.decodedMsg.authority,
     minter: msg.msg.decodedMsg.minter,
@@ -36,16 +37,26 @@ export async function handleEventIssue(event: CosmosEvent): Promise<void> {
   await messageRecord.save();
 }
 
+export async function handleMsgMint(msg: CosmosMessage): Promise<void> {
+  const fantokens = await Fantoken.getByDenom(msg.msg.decodedMsg.coin.denom)
 
-/*export async function handleBlock(block: CosmosBlock): Promise<void> {
-  // If you wanted to index each block in Cosmos (CosmosHub), you could do that here
+  if (fantokens.length > 0) {
+    const fantoken = fantokens[0]
+    fantoken.supply += BigInt(msg.msg.decodedMsg.coin.amount)
+    fantoken.updatedAt = new Date(msg.block.block.header.time),
+
+    await fantoken.save()
+  }
 }
 
-export async function handleTransaction(tx: CosmosTransaction): Promise<void> {
-  const transactionRecord = Transaction.create({
-    id: tx.hash,
-    blockHeight: BigInt(tx.block.block.header.height),
-    timestamp: tx.block.block.header.time,
-  });
-  await transactionRecord.save();
-}*/
+export async function handleMsgBurn(msg: CosmosMessage): Promise<void> {
+  const fantokens = await Fantoken.getByDenom(msg.msg.decodedMsg.coin.denom)
+
+  if (fantokens.length > 0) {
+    const fantoken = fantokens[0]
+    fantoken.supply -= BigInt(msg.msg.decodedMsg.coin.amount)
+    fantoken.updatedAt = new Date(msg.block.block.header.time),
+
+    await fantoken.save()
+  }
+}
