@@ -4,7 +4,7 @@ import {
   CosmosMessage,
 } from "@subql/types-cosmos";
 
-export async function handleMessage(msg: CosmosMessage): Promise<void> {
+export async function handleMsgIssue(msg: CosmosMessage): Promise<void> {
   const messageRecord = Fantoken.create({
     id: `${msg.tx.hash}-${msg.idx}`,
     blockHeight: BigInt(msg.block.block.header.height),
@@ -16,12 +16,13 @@ export async function handleMessage(msg: CosmosMessage): Promise<void> {
     uri: msg.msg.decodedMsg.uri,
     authority: msg.msg.decodedMsg.authority,
     minter: msg.msg.decodedMsg.minter,
-    createdAt: msg.block.block.header.time
+    createdAt: new Date(msg.block.block.header.time),
+    updatedAt: new Date(msg.block.block.header.time),
   });
   await messageRecord.save();
 }
 
-export async function handleEvent(event: CosmosEvent): Promise<void> {
+export async function handleEventIssue(event: CosmosEvent): Promise<void> {
   const messageRecord = await Fantoken.get(`${event.tx.hash}-${event.msg.idx}`)
   for(const attr of event.event.attributes) {
     switch(attr.key) {

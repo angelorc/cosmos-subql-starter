@@ -34,9 +34,10 @@ type Fantoken @entity {
   name: String!
   denom: String!
   symbol: String!
-  max_supply: String!
+  max_supply: BigInt!
   uri: String!
   authority: String!
   minter: String!
-  createdAt: String!
+  createdAt: Date!
+  updatedAt: Date!
 }

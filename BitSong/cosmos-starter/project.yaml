@@ -41,13 +41,13 @@ dataSources:
     mapping:
       file: ./dist/index.js
       handlers:
-        - handler: handleEvent
+        - handler: handleEventIssue
           kind: cosmos/EventHandler
           filter:
             type: bitsong.fantoken.v1beta1.EventIssue
             messageFilter:
               type: /bitsong.fantoken.MsgIssue
-        - handler: handleMessage
+        - handler: handleMsgIssue
           kind: cosmos/MessageHandler
           filter:
             type: /bitsong.fantoken.MsgIssue
