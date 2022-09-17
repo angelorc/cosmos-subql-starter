@@ -1,0 +1,27 @@
+type Merkledrop @entity {
+  id: ID!
+  blockHeight: BigInt!
+  txHash: String!
+  merkledropId: String! @index
+  merkleRoot: String!
+  startHeight: BigInt!
+  endHeight: BigInt!
+  denom: String!
+  amount: BigInt!
+  claimed: BigInt!
+  owner: String!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+type Claim @entity {
+  id: ID!
+  blockHeight: BigInt!
+  txHash: String!
+  sender: String!
+  merkledropId: String! @index
+  index: BigInt!
+  amount: BigInt!
+  denom: String!
+  claimedAt: Date!
+}

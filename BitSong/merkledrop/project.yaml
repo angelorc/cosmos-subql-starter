@@ -1,0 +1,55 @@
+specVersion: 1.0.0
+name: bitsong-subql-starter
+version: 0.0.1
+runner:
+  node:
+    name: '@subql/node-cosmos'
+    version: '>=0.1.0'
+  query:
+    name: '@subql/query'
+    version: '*'
+description: >-
+  This project can be use as a starting point for developing your BitSong
+  based SubQuery project
+repository: 'https://github.com/angelorc/cosmos-subql-starter'
+schema:
+  file: ./schema.graphql
+network:
+  chainId: bitsong-2b
+  #  This endpoint might not be publicly available
+  endpoint: 'https://rpc.explorebitsong.com'
+  dictionary: 'https://api.subquery.network/sq/subquery/cosmos-hub-dictionary'
+  chainTypes:
+    bitsong.merkledrop:
+      file: ./proto/bitsong/merkledrop/v1beta1/tx.proto
+      messages:
+        - MsgCreate
+        - MsgClaim
+    bitsong.merkledrop.v1beta1.merkledrop:
+      file: ./proto/bitsong/merkledrop/v1beta1/merkledrop.proto
+      messages:
+        - Merkledrop
+    cosmos.base.v1beta1: # needed by Merkledrop module
+      file: "./proto/cosmos/cosmos.base.v1beta1.coin.proto"
+      messages:
+        - "Coin"
+dataSources:
+  - kind: cosmos/Runtime
+    startBlock: 6779500
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleMsgCreate
+          kind: cosmos/MessageHandler
+          filter:
+            type: "/bitsong.merkledrop.v1beta1.MsgCreate"
+        - handler: handleEventCreate
+          kind: cosmos/EventHandler
+          filter:
+            type: bitsong.merkledrop.v1beta1.EventCreate
+            messageFilter:
+              type: "/bitsong.merkledrop.v1beta1.MsgCreate"
+        - handler: handleMsgClaim
+          kind: cosmos/MessageHandler
+          filter:
+            type: "/bitsong.merkledrop.v1beta1.MsgClaim"
