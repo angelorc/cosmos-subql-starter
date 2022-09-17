@@ -24,3 +24,26 @@ type LiquidityEvent @entity {
   tokensIn: Coin
   tokensOut: Coin
 }
+
+type LockTokensEvent @entity {
+  id: ID!
+  blockHeight: BigInt!
+  blockTime: Date!
+  txHash: String!
+  periodLockId: String!
+  owner: String!
+  amount: String
+  duration: String!
+  unlockTime: String
+  unlockedCoins: String
+}
+
+type AddTokensToLockEvent @entity {
+  id: ID!
+  blockHeight: BigInt!
+  blockTime: Date!
+  txHash: String!
+  periodLockId: String!
+  owner: String!
+  amount: String!
+}

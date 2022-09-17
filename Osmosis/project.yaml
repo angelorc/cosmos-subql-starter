@@ -20,11 +20,13 @@ network:
   endpoint: 'https://osmosis-mainnet-archive.allthatnode.com:26657'
   dictionary: 'https://api.subquery.network/sq/subquery/cosmos-hub-dictionary'
   chainTypes:
+
     osmosis.gamm:
       file: ./proto/osmosis/gamm/pool-models/balancer/balancerPool.proto
       messages:
         - PoolAsset
         - Pool
+  
     osmosis.gamm.v1beta1:
       file: ./proto/osmosis/gamm/v1beta1/tx.proto
       messages:
@@ -36,29 +38,60 @@ network:
         - MsgJoinSwapShareAmountOut
         - MsgExitSwapExternAmountOut
         - MsgExitSwapShareAmountIn
+  
     osmosis.gamm.poolmodels.balancer.v1beta1:
       file: ./proto/osmosis/gamm/pool-models/balancer/tx.proto
       messages:
         - MsgCreateBalancerPool
+
+    osmosis.lockup.lock:
+      file: ./proto/osmosis/lockup/lock.proto
+      messages:
+        - PeriodLock
+        - QueryCondition
+        - SyntheticLock
+    
+    osmosis.lockup:
+      file: ./proto/osmosis/lockup/tx.proto
+      messages:
+        - MsgLockTokens
+        - MsgBeginUnlockingAll
+        - MsgBeginUnlocking
+        - MsgExtendLockup
+  
     cosmos.base.v1beta1:
       file: "./proto/cosmos/cosmos.base.v1beta1.coin.proto"
       messages:
         - Coin
+
 dataSources:
   - kind: cosmos/Runtime
     startBlock: 6005920
     mapping:
       file: ./dist/index.js
       handlers:
+
         - handler: handleTokenSwappedEvent
           kind: cosmos/EventHandler
           filter:
             type: token_swapped
+      
         - handler: handleLiquidityEvent
           kind: cosmos/EventHandler
           filter:
             type: pool_joined
+      
         - handler: handleLiquidityEvent
           kind: cosmos/EventHandler
           filter:
             type: pool_exited
+
+        - handler: handleLockTokensEvent
+          kind: cosmos/EventHandler
+          filter:
+            type: lock_tokens
+
+        - handler: handleAddTokensToLockEvent
+          kind: cosmos/EventHandler
+          filter:
+            type: add_tokens_to_lock
