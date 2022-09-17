@@ -17,7 +17,7 @@ schema:
 network:
   chainId: osmosis-1
   #  This endpoint might not be publicly available
-  endpoint: 'https://rpc.osmosis.interbloc.org'
+  endpoint: 'https://osmosis-mainnet-archive.allthatnode.com:26657'
   dictionary: 'https://api.subquery.network/sq/subquery/cosmos-hub-dictionary'
   chainTypes:
     osmosis.gamm:
@@ -46,7 +46,7 @@ network:
         - Coin
 dataSources:
   - kind: cosmos/Runtime
-    startBlock: 6050000
+    startBlock: 6005920
     mapping:
       file: ./dist/index.js
       handlers:
