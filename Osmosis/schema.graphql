@@ -1,3 +1,8 @@
+type Coin @jsonField {
+  amount: String!
+  denom: String! @index
+}
+
 type TokenSwapEvent @entity {
   id: ID!
   blockHeight: BigInt!
@@ -9,7 +14,13 @@ type TokenSwapEvent @entity {
   tokensOut: Coin!
 }
 
-type Coin @jsonField {
-  amount: String!
-  denom: String! @index
+type LiquidityEvent @entity {
+  id: ID!
+  blockHeight: BigInt!
+  blockTime: Date!
+  txHash: String!
+  sender: String!
+  poolId: BigInt! @index
+  tokensIn: Coin
+  tokensOut: Coin
 }

@@ -1,7 +1,7 @@
-import { TokenSwapEvent, Coin } from "../types";
+import { TokenSwapEvent, Coin, LiquidityEvent } from "../types";
 import { CosmosEvent } from "@subql/types-cosmos";
 
-export async function handleEventTokenSwapped(event: CosmosEvent): Promise<void> {
+export async function handleTokenSwappedEvent(event: CosmosEvent): Promise<void> {
   const chunkSize = 5;
 
   for (let i = 0; i < event.event.attributes.length; i += chunkSize) {
@@ -33,6 +33,40 @@ export async function handleEventTokenSwapped(event: CosmosEvent): Promise<void>
       }
     
       await evt.save();
+  }
+}
+
+export async function handleLiquidityEvent(event: CosmosEvent): Promise<void> {
+  const chunkSize = 4;
+
+  for (let i = 0; i < event.event.attributes.length; i += chunkSize) {
+      const chunk = event.event.attributes.slice(i, i + chunkSize);
+
+      if (chunk.length == chunkSize) {
+        const evt = new LiquidityEvent(`${event.tx.hash}-${event.msg.idx}-${event.idx}-${i}`);    
+  
+        evt.blockHeight = BigInt(event.block.block.header.height);
+        evt.blockTime = new Date(event.block.block.header.time);
+        evt.txHash = event.tx.hash;
+
+        for(const attr of chunk) {
+          switch(attr.key) {
+            case "sender":
+              evt.sender = attr.value;
+              break;
+            case "pool_id":
+              evt.poolId = BigInt(attr.value);
+              break;
+            case "tokens_in":
+              evt.tokensIn = parseCoins(attr.value)[0];
+              break;
+            default:
+              break;
+          }
+        }
+      
+        await evt.save();
+      }
   }
 }
 

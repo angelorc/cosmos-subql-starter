@@ -50,7 +50,15 @@ dataSources:
     mapping:
       file: ./dist/index.js
       handlers:
-        - handler: handleEventTokenSwapped
+        - handler: handleTokenSwappedEvent
           kind: cosmos/EventHandler
           filter:
             type: token_swapped
+        - handler: handleLiquidityEvent
+          kind: cosmos/EventHandler
+          filter:
+            type: pool_joined
+        - handler: handleLiquidityEvent
+          kind: cosmos/EventHandler
+          filter:
+            type: pool_exited
