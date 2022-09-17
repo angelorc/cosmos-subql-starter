@@ -1,0 +1,56 @@
+specVersion: 1.0.0
+name: bitsong-subql-starter
+version: 0.0.1
+runner:
+  node:
+    name: '@subql/node-cosmos'
+    version: '>=0.1.0'
+  query:
+    name: '@subql/query'
+    version: '*'
+description: >-
+  This project can be use as a starting point for developing your BitSong
+  based SubQuery project
+repository: 'https://github.com/angelorc/cosmos-subql-starter'
+schema:
+  file: ./schema.graphql
+network:
+  chainId: osmosis-1
+  #  This endpoint might not be publicly available
+  endpoint: 'https://rpc.osmosis.interbloc.org'
+  dictionary: 'https://api.subquery.network/sq/subquery/cosmos-hub-dictionary'
+  chainTypes:
+    osmosis.gamm:
+      file: ./proto/osmosis/gamm/pool-models/balancer/balancerPool.proto
+      messages:
+        - PoolAsset
+        - Pool
+    osmosis.gamm.v1beta1:
+      file: ./proto/osmosis/gamm/v1beta1/tx.proto
+      messages:
+        - MsgJoinPool
+        - MsgExitPool
+        - MsgSwapExactAmountIn
+        - MsgSwapExactAmountOut
+        - MsgJoinSwapExternAmountIn
+        - MsgJoinSwapShareAmountOut
+        - MsgExitSwapExternAmountOut
+        - MsgExitSwapShareAmountIn
+    osmosis.gamm.poolmodels.balancer.v1beta1:
+      file: ./proto/osmosis/gamm/pool-models/balancer/tx.proto
+      messages:
+        - MsgCreateBalancerPool
+    cosmos.base.v1beta1:
+      file: "./proto/cosmos/cosmos.base.v1beta1.coin.proto"
+      messages:
+        - Coin
+dataSources:
+  - kind: cosmos/Runtime
+    startBlock: 6050000
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleEventTokenSwapped
+          kind: cosmos/EventHandler
+          filter:
+            type: token_swapped

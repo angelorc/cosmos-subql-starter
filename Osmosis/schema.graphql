@@ -1,0 +1,15 @@
+type TokenSwapEvent @entity {
+  id: ID!
+  blockHeight: BigInt!
+  blockTime: Date!
+  txHash: String!
+  sender: String! @index
+  poolId: BigInt! @index
+  tokensIn: Coin!
+  tokensOut: Coin!
+}
+
+type Coin @jsonField {
+  amount: String!
+  denom: String! @index
+}
