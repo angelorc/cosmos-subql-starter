@@ -17,13 +17,6 @@ export async function handleEventTokenSwapped(event: CosmosEvent): Promise<void>
         evt.poolId = BigInt(attr.value);
         break;
       case "tokens_in":
-        logger.info(
-          `
-          
-          ${parseCoins(attr.value)[0]}
-          
-          `
-        )
         evt.tokensIn = parseCoins(attr.value)[0];
         break;
       case "tokens_out":
